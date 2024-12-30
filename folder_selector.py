@@ -10,8 +10,10 @@ class FolderSelector:
         self.status_callback = status_callback
         self.log_callback = log_callback
 
+    #Open a dialog to select a folder.
     def open_folder_dialog(self):
-        """Open a dialog to select a folder."""
+        if self.observer:  # Stop monitoring the selected folder if active
+            self.stop_monitoring()
         folder_path = filedialog.askdirectory(title="Select a Folder")
         if folder_path:
             self.folder_path = folder_path
@@ -20,8 +22,8 @@ class FolderSelector:
         else:
             messagebox.showwarning("No Selection", "No folder was selected.")
 
+    #Start monitoring the selected folder.
     def start_monitoring(self):
-        """Start monitoring the selected folder."""
         if not self.folder_path:
             messagebox.showwarning("No Folder", "No folder selected for monitoring.")
             return
@@ -38,8 +40,8 @@ class FolderSelector:
         self.status_callback("Active")
         self.log_callback("Monitoring started.")
 
+    #Stop monitoring
     def stop_monitoring(self):
-        """Stop monitoring the folder."""
         if self.observer and self.observer.is_alive():
             self.observer.stop()
             self.observer.join()
